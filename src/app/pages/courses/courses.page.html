@@ -5,15 +5,31 @@
 </ion-header>
 
 <ion-content>
+  <!-- Reusable search component -->
   <app-search (search)="onSearch($event)"></app-search>
 
-  <ion-list>
+  <!-- Course list -->
+  <ion-list *ngIf="courses.length > 0; else noCourses">
     <ion-item *ngFor="let course of courses">
-      {{ course.name }}
+      <ion-label>
+        <h2>{{ course.title }}</h2>
+        <p>{{ course.description }}</p>
+      </ion-label>
     </ion-item>
   </ion-list>
 
-  <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+  <!-- Message when no results -->
+  <ng-template #noCourses>
+    <ion-text class="ion-padding">
+      <p>No courses found.</p>
+    </ion-text>
+  </ng-template>
+
+  <!-- Infinite Scroll -->
+  <ion-infinite-scroll
+    threshold="100px"
+    (ionInfinite)="loadMore($event)"
+    [disabled]="lastPageReached">
     <ion-infinite-scroll-content
       loadingSpinner="bubbles"
       loadingText="Loading more courses...">
