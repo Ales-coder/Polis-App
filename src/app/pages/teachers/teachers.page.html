@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mësuesit</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="onSearchChange($event)"></ion-searchbar>
+
+  <ion-list *ngIf="!loading">
+    <ion-item *ngFor="let teacher of teachers">
+      {{ teacher.name }} - {{ teacher.email }}
+      <ion-button slot="end" color="primary" [routerLink]="['/teachers/edit', teacher.id]">Edito</ion-button>
+      <ion-button slot="end" color="danger" (click)="deleteTeacher(teacher.id)">Fshi</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+
+  <ion-pagination
+    [total]="total"
+    [pageSize]="pageSize"
+    [currentPage]="page"
+    (pageChange)="onPageChange($event)">
+  </ion-pagination>
+</ion-content>

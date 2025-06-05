@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { TeacherService } from '../../services/teacher.service';
 import { Teacher } from '../../models/teacher.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-teachers',
@@ -21,14 +22,14 @@ export class TeachersPage implements OnInit {
   pageSize: number = 20;
   isLastPage: boolean = false;
 
-  constructor(private teacherService: TeacherService) {}
+  constructor(private teacherService: TeacherService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadTeachers();
   }
 
   loadTeachers(): void {
-    this.teacherService.getAll(this.searchTerm, this.currentPage, this.pageSize).subscribe({
+    this.teacherService.getAll().subscribe({
       next: (data: Teacher[]) => {
         this.teachers = data;
         this.isLastPage = data.length < this.pageSize;
@@ -70,10 +71,10 @@ export class TeachersPage implements OnInit {
   }
 
   createTeacher(): void {
-    // TODO: Navigate to TeacherFormPage for creating new teacher
+    this.router.navigate(['/teachers/form']); // Rrugë për form krijimi
   }
 
   editTeacher(teacher: Teacher): void {
-    // TODO: Navigate to TeacherFormPage with teacher.id
+    this.router.navigate(['/teachers/form', teacher.id]); // Rrugë për editim me id
   }
 }

@@ -1,35 +1,41 @@
+// src/app/services/teacher.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Teacher } from '../models/teacher.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeacherService {
-  private readonly baseUrl = 'http://localhost:8080';
 
-  constructor(private http: HttpClient) {}
+  private baseUrl = 'http://localhost:8080/api/teachers';
 
-  getAll(filter: string = '', page: number = 0, size: number = 100): Observable<Teacher[]> {
-    return this.http.post<{ data: Teacher[] }>(`${this.baseUrl}/filterTeachers`, {
-      filter,
-      page,
-      size
-    }).pipe(
-      map(response => response.data || []) // merr vetëm data nga përgjigjja
-    );
+  constructor(private http: HttpClient) { }
+
+  // Merr listën e të gjithë mësuesve
+  getAll(): Observable<Teacher[]> {
+    return this.http.get<Teacher[]>(this.baseUrl);
   }
 
-  upsert(teacher: Teacher): Observable<Teacher> {
-    return this.http.post<Teacher>(`${this.baseUrl}/upsertTeacher`, teacher);
-  }
-
-  delete(id: number): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/deleteTeacher`, { id });
-  }
-
+  // Merr një mësues me ID
   getById(id: number): Observable<Teacher> {
-    return this.http.post<Teacher>(`${this.baseUrl}/getTeacher`, { id });
+    return this.http.get<Teacher>(`${this.baseUrl}/${id}`);
+  }
+
+  // Shto mësues të ri
+  add(teacher: Teacher): Observable<Teacher> {
+    return this.http.post<Teacher>(this.baseUrl, teacher);
+  }
+
+  // Përditëso një mësues ekzistues
+  update(id: number, teacher: Teacher): Observable<Teacher> {
+    return this.http.put<Teacher>(`${this.baseUrl}/${id}`, teacher);
+  }
+
+  // Fshi një mësues
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
