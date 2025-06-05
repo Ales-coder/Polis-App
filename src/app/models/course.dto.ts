@@ -18,7 +18,7 @@ export interface RespSliceDto<T> {
     pageable: {
       pageNumber: number;
       pageSize: number;
-      
+
     };
     first: boolean;
     last: boolean;
